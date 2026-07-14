@@ -155,3 +155,22 @@ vulnerability process.
 - **Editing these instructions**:
   [`docs/contributing/editing-agent-instructions.md`](docs/contributing/editing-agent-instructions.md)
   — Rules for modifying AGENTS.md or any domain-specific guide it references.
+
+---
+
+## Cursor Cloud specific instructions
+
+The Cloud VM is **CPU-only (no GPU)**, 4 CPUs / ~15 GB RAM. A ready-to-use
+CPU editable dev install already exists in `.venv` (built with the precompiled
+CPU wheel path in `docs/getting_started/installation/cpu.md`). Use
+`.venv/bin/python`; `uv` is at `~/.local/bin`.
+
+- Python-only edits are picked up automatically (editable install). Only
+  reinstall if you touch C++/kernels or the precompiled wheel goes stale — then
+  add `VLLM_PRECOMPILED_WHEEL_COMMIT=nightly` to the CPU install command.
+- Run on CPU with `VLLM_CPU_KVCACHE_SPACE=2` and `--dtype bfloat16`
+  (e.g. `.venv/bin/python examples/basic/offline_inference/basic.py`).
+- Not all `tests/` pass on CPU; run the `cpu_test` marker
+  (`.venv/bin/python -m pytest -m cpu_test ...`).
+- `pre-commit install` refuses here because `core.hooksPath` is set globally;
+  run hooks directly (`pre-commit run ...`).
